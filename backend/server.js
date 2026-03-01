@@ -7,7 +7,9 @@ const userRoutes = require('./routes/userRoutes');
 const coinRoutes = require('./routes/coinRoutes');
 
 // Load environment variables
-dotenv.config();
+if (process.env.NODE_ENV !== 'production') {
+    dotenv.config();
+}
 
 // Connect to MongoDB
 connectDB();
