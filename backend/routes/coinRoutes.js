@@ -34,7 +34,10 @@ const fetchCoinGecko = async (endpoint, params = {}, retries = 3) => {
     for (let attempt = 1; attempt <= retries; attempt++) {
         try {
             const { data } = await axios.get(`${COINGECKO}${endpoint}`, {
-                params,
+                params: {
+                    ...params,
+                    x_cg_demo_api_key: process.env.COINGECKO_API_KEY,
+                },
                 headers: {
                     'Accept': 'application/json',
                     'User-Agent': 'SignalLens/1.0',
