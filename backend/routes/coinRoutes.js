@@ -93,20 +93,42 @@ router.get('/global', async (req, res) => {
 });
 
 // @route GET /api/coins/markets
+// @route GET /api/coins/markets
 router.get('/markets', async (req, res) => {
     try {
         const limit = req.query.limit || 20;
-        const data = await smartFetch(`markets_${limit}`, () =>
-            fetchCoinGecko('/coins/markets', {
+        const cacheKey = `markets_${limit}`;
+        const { data: cachedData, isFresh, isStale } = getFromCache(cacheKey);
+
+        if (isFresh) {
+            console.log(`✅ Fresh cache: ${cacheKey}`);
+            return res.json(cachedData);
+        }
+
+        // Stagger requests based on limit to avoid simultaneous hits
+        const delay = limit <= 20 ? 0 : limit <= 50 ? 1000 : 2000;
+        if (delay > 0) {
+            await new Promise((resolve) => setTimeout(resolve, delay));
+        }
+
+        try {
+            const data = await fetchCoinGecko('/coins/markets', {
                 vs_currency: 'usd',
                 order: 'market_cap_desc',
                 per_page: limit,
                 page: 1,
                 sparkline: false,
                 price_change_percentage: '24h',
-            })
-        );
-        res.json(data);
+            });
+            setCache(cacheKey, data);
+            res.json(data);
+        } catch (error) {
+            if (isStale) {
+                console.log(`⚡ Serving stale cache: ${cacheKey}`);
+                return res.json(cachedData);
+            }
+            throw error;
+        }
     } catch (error) {
         console.error('Markets error:', error.message);
         res.status(500).json({ message: 'Failed to fetch markets data' });
