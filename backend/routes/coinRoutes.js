@@ -3,6 +3,7 @@ const router = express.Router();
 const axios = require('axios');
 
 const COINGECKO = 'https://api.coingecko.com/api/v3';
+const ALTERNATIVE_ME = 'https://api.alternative.me';
 
 // Cache durations
 const CACHE_DURATION = 120 * 1000;        // 2 minutes fresh
@@ -272,6 +273,30 @@ router.get('/:coinId/chart', async (req, res) => {
     } catch (error) {
         console.error('Coin chart error:', error.message);
         res.status(500).json({ message: 'Failed to fetch coin chart' });
+    }
+});
+
+// @route GET /api/coins/fear-greed
+router.get('/fear-greed', async (req, res) => {
+    try {
+        const now = Date.now();
+        const cacheKey = 'fear_greed';
+
+        if (cache[cacheKey] && now - cache[cacheKey].timestamp < CACHE_DURATION) {
+            console.log('✅ Cache hit: fear_greed');
+            return res.json(cache[cacheKey].data);
+        }
+
+        console.log('🌐 Fetching: fear_greed');
+        const { data } = await axios.get(`${ALTERNATIVE_ME}/fng/?limit=7`, {
+            timeout: 10000,
+        });
+
+        setCache(cacheKey, data);
+        res.json(data);
+    } catch (error) {
+        console.error('Fear & Greed error:', error.message);
+        res.status(500).json({ message: 'Failed to fetch Fear & Greed data' });
     }
 });
 

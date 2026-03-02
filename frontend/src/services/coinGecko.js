@@ -51,3 +51,9 @@ export const getCoinChart = async (coinId, days = 7) => {
     });
     return data;
 };
+
+// Get Fear & Greed Index
+export const getFearGreedIndex = async () => {
+  const { data } = await API.get('/fear-greed');
+  return data;
+};

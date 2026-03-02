@@ -5,6 +5,7 @@ import MarketOverviewCard from '../components/bento/MarketOverviewCard';
 import TrendingMoversCard from '../components/bento/TrendingMoversCard';
 import MarketChartCard from '../components/bento/MarketChartCard';
 import WatchlistCard from '../components/bento/WatchlistCard';
+import MarketSentimentCard from '../components/bento/MarketSentimentCard';
 import { useAuth } from '../context/AuthContext';
 import { getSignal } from '../utils/signalLogic';
 import { getTopCoins } from '../services/coinGecko';
@@ -188,45 +189,8 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Market Sentiment */}
-            <div className="bg-white/3 border border-white/8 rounded-2xl p-6 hover:border-white/15 transition-all">
-              <p className="text-gray-500 text-xs uppercase tracking-wider mb-4">Market Sentiment</p>
-              <div className="flex flex-col items-center justify-center gap-3">
-                <div
-                  className={`w-20 h-20 rounded-full flex items-center justify-center border-2 ${
-                    sentiment > 60
-                      ? 'bg-green-400/20 border-green-400/30'
-                      : sentiment > 40
-                      ? 'bg-yellow-400/20 border-yellow-400/30'
-                      : 'bg-red-400/20 border-red-400/30'
-                  }`}
-                >
-                  <span
-                    className={`font-black text-2xl ${
-                      sentiment > 60
-                        ? 'text-green-400'
-                        : sentiment > 40
-                        ? 'text-yellow-400'
-                        : 'text-red-400'
-                    }`}
-                  >
-                    {sentiment}
-                  </span>
-                </div>
-                <p
-                  className={`font-bold text-sm ${
-                    sentiment > 60
-                      ? 'text-green-400'
-                      : sentiment > 40
-                      ? 'text-yellow-400'
-                      : 'text-red-400'
-                  }`}
-                >
-                  {sentiment > 60 ? 'Greed' : sentiment > 40 ? 'Neutral' : 'Fear'}
-                </p>
-                <p className="text-gray-500 text-xs text-center">Fear & Greed Index</p>
-              </div>
-            </div>
+ {/* Market Sentiment */}
+<MarketSentimentCard />
 
           </div>
         </div>
