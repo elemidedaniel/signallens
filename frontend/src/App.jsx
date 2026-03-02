@@ -10,6 +10,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import CoinDetail from './pages/CoinDetail';
+import Markets from './pages/Markets';
 
 function App() {
   return (
@@ -28,6 +29,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/markets"
+              element={
+                <ProtectedRoute>
+                  <Markets />
                 </ProtectedRoute>
               }
             />

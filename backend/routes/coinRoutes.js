@@ -139,6 +139,30 @@ router.get('/markets', async (req, res) => {
     }
 });
 
+// @route GET /api/coins/screener
+router.get('/screener', async (req, res) => {
+  try {
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 20;
+    const cacheKey = `screener_${page}_${limit}`;
+
+    const data = await smartFetch(cacheKey, () =>
+      fetchCoinGecko('/coins/markets', {
+        vs_currency: 'usd',
+        order: 'market_cap_desc',
+        per_page: limit,
+        page: page,
+        sparkline: false,
+        price_change_percentage: '24h',
+      })
+    );
+    res.json(data);
+  } catch (error) {
+    console.error('Screener error:', error.message);
+    res.status(500).json({ message: 'Failed to fetch screener data' });
+  }
+});
+
 // @route GET /api/coins/chart
 router.get('/chart', async (req, res) => {
     try {

@@ -2,9 +2,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 const navItems = [
-  { icon: '⚡', label: 'Dashboard', path: '/dashboard' },
-  { icon: '🎯', label: 'Watchlist', path: '/profile' },
-  { icon: '👤', label: 'Profile', path: '/profile' },
+  { label: 'Dashboard', icon: '📊', path: '/dashboard' },
+  { label: 'Markets', icon: '📈', path: '/markets' },
+  { label: 'Watchlist', icon: '🎯', path: '/profile' },
 ];
 
 const Sidebar = () => {

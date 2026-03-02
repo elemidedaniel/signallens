@@ -57,3 +57,11 @@ export const getFearGreedIndex = async () => {
   const { data } = await API.get('/fear-greed');
   return data;
 };
+
+// Get screener data with pagination
+export const getScreenerCoins = async (page = 1, limit = 20) => {
+  const { data } = await API.get('/screener', {
+    params: { page, limit },
+  });
+  return data;
+};
