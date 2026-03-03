@@ -23,3 +23,9 @@ export const getProfile = () => API.get('/user/profile');
 export const updateProfile = (data) => API.put('/user/profile', data);
 export const addToWatchlist = (data) => API.post('/user/watchlist', data);
 export const removeFromWatchlist = (coinId) => API.delete(`/user/watchlist/${coinId}`);
+
+// Alerts
+export const createAlert = (alertData) => API.post('/alerts', alertData);
+export const getAlerts = () => API.get('/alerts');
+export const deleteAlert = (id) => API.delete(`/alerts/${id}`);
+export const toggleAlert = (id) => API.put(`/alerts/${id}/toggle`);

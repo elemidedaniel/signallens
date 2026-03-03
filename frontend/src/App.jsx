@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import CoinDetail from './pages/CoinDetail';
 import Markets from './pages/Markets';
+import Alerts from './pages/Alerts';
 
 function App() {
   return (
@@ -37,6 +38,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Markets />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/alerts"
+              element={
+                <ProtectedRoute>
+                  <Alerts />
                 </ProtectedRoute>
               }
             />
