@@ -137,6 +137,7 @@ const Portfolio = () => {
 
       <main className="lg:ml-60 pt-16 pb-20 lg:pb-6 px-6 min-h-screen">
         <div className="max-w-5xl mx-auto py-8">
+
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -156,7 +157,9 @@ const Portfolio = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div className="bg-white/3 border border-white/8 rounded-2xl p-5">
                 <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Total Value</p>
-                <p className="text-white text-2xl font-black">${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                <p className="text-white text-2xl font-black">
+                  ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
               </div>
               <div className={`bg-white/3 border rounded-2xl p-5 ${isProfit ? 'border-green-500/20' : 'border-red-500/20'}`}>
                 <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Total P&L</p>
@@ -256,6 +259,7 @@ const Portfolio = () => {
             </div>
           )}
 
+          {/* Content */}
           {loading ? (
             <div className="flex flex-col gap-3">
               {[...Array(3)].map((_, i) => (
@@ -273,69 +277,77 @@ const Portfolio = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-              {/* Holdings Table */}
-              <div className="xl:col-span-2 bg-white/3 border border-white/8 rounded-2xl overflow-hidden">
-                <div className="grid grid-cols-12 gap-2 px-6 py-3 border-b border-white/5 text-gray-500 text-xs uppercase tracking-wider">
-                  <div className="col-span-4">Coin</div>
-                  <div className="col-span-2 text-right">Amount</div>
-                  <div className="col-span-2 text-right">Value</div>
-                  <div className="col-span-2 text-right">P&L</div>
-                  <div className="col-span-2 text-right">24h</div>
-                </div>
-                {portfolio.holdings.map((holding) => {
-                  const livePrice = getLivePrice(holding.coinId);
-                  const value = holding.amount * livePrice;
-                  const cost = holding.amount * holding.buyPrice;
-                  const pnl = value - cost;
-                  const pnlPercent = cost > 0 ? ((value - cost) / cost) * 100 : 0;
-                  const change24h = getLiveChange(holding.coinId);
-                  const isPnlPositive = pnl >= 0;
 
-                  return (
-                    <div
-                      key={holding.coinId}
-                      onClick={() => navigate(`/coin/${holding.coinId}`)}
-                      className="grid grid-cols-12 gap-2 px-6 py-4 border-b border-white/3 hover:bg-white/3 transition-all cursor-pointer group"
-                    >
-                      <div className="col-span-4 flex items-center gap-2">
-                        {holding.coinImage && (
-                          <img src={holding.coinImage} alt={holding.coinName} className="w-7 h-7 rounded-full flex-shrink-0" />
-                        )}
-                        <div>
-                          <p className="text-white text-sm font-semibold">{holding.coinSymbol.toUpperCase()}</p>
-                          <p className="text-gray-600 text-xs">{holding.coinName}</p>
+              {/* Holdings Table */}
+              <div className="xl:col-span-2 bg-white/3 border border-white/8 rounded-2xl">
+                <div className="overflow-x-auto">
+                  {/* Header */}
+                  <div className="grid grid-cols-12 gap-2 px-6 py-3 border-b border-white/5 text-gray-500 text-xs uppercase tracking-wider min-w-[520px]">
+                    <div className="col-span-4">Coin</div>
+                    <div className="col-span-2 text-right">Amount</div>
+                    <div className="col-span-2 text-right">Value</div>
+                    <div className="col-span-2 text-right">P&L</div>
+                    <div className="col-span-2 text-right">24h</div>
+                  </div>
+
+                  {/* Rows */}
+                  {portfolio.holdings.map((holding) => {
+                    const livePrice = getLivePrice(holding.coinId);
+                    const value = holding.amount * livePrice;
+                    const cost = holding.amount * holding.buyPrice;
+                    const pnl = value - cost;
+                    const pnlPercent = cost > 0 ? ((value - cost) / cost) * 100 : 0;
+                    const change24h = getLiveChange(holding.coinId);
+                    const isPnlPositive = pnl >= 0;
+
+                    return (
+                      <div
+                        key={holding.coinId}
+                        onClick={() => navigate(`/coin/${holding.coinId}`)}
+                        className="grid grid-cols-12 gap-2 px-6 py-4 border-b border-white/3 hover:bg-white/3 transition-all cursor-pointer group min-w-[520px]"
+                      >
+                        <div className="col-span-4 flex items-center gap-2">
+                          {holding.coinImage && (
+                            <img src={holding.coinImage} alt={holding.coinName} className="w-7 h-7 rounded-full flex-shrink-0" />
+                          )}
+                          <div>
+                            <p className="text-white text-sm font-semibold">{holding.coinSymbol.toUpperCase()}</p>
+                            <p className="text-gray-600 text-xs">{holding.coinName}</p>
+                          </div>
+                        </div>
+                        <div className="col-span-2 flex items-center justify-end">
+                          <p className="text-gray-400 text-sm">{holding.amount}</p>
+                        </div>
+                        <div className="col-span-2 flex items-center justify-end">
+                          <p className="text-white text-sm font-semibold">
+                            ${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </p>
+                        </div>
+                        <div className="col-span-2 flex items-center justify-end">
+                          <div className="text-right">
+                            <p className={`text-sm font-semibold ${isPnlPositive ? 'text-green-400' : 'text-red-400'}`}>
+                              {isPnlPositive ? '+' : ''}${pnl.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </p>
+                            <p className={`text-xs ${isPnlPositive ? 'text-green-500' : 'text-red-500'}`}>
+                              {isPnlPositive ? '+' : ''}{pnlPercent.toFixed(2)}%
+                            </p>
+                          </div>
+                        </div>
+                        <div className="col-span-2 flex items-center justify-end gap-2">
+                          <span className={`text-xs font-semibold ${change24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            {change24h >= 0 ? '+' : ''}{change24h.toFixed(2)}%
+                          </span>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleRemove(holding.coinId); }}
+                            className="text-gray-700 hover:text-red-400 text-xs opacity-0 group-hover:opacity-100 transition-all"
+                          >
+                            ✕
+                          </button>
                         </div>
                       </div>
-                      <div className="col-span-2 flex items-center justify-end">
-                        <p className="text-gray-400 text-sm">{holding.amount}</p>
-                      </div>
-                      <div className="col-span-2 flex items-center justify-end">
-                        <p className="text-white text-sm font-semibold">${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                      </div>
-                      <div className="col-span-2 flex items-center justify-end">
-                        <div className="text-right">
-                          <p className={`text-sm font-semibold ${isPnlPositive ? 'text-green-400' : 'text-red-400'}`}>
-                            {isPnlPositive ? '+' : ''}${pnl.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                          </p>
-                          <p className={`text-xs ${isPnlPositive ? 'text-green-500' : 'text-red-500'}`}>
-                            {isPnlPositive ? '+' : ''}{pnlPercent.toFixed(2)}%
-                          </p>
-                        </div>
-                      </div>
-                      <div className="col-span-2 flex items-center justify-end gap-2">
-                        <span className={`text-xs font-semibold ${change24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                          {change24h >= 0 ? '+' : ''}{change24h.toFixed(2)}%
-                        </span>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); handleRemove(holding.coinId); }}
-                          className="text-gray-700 hover:text-red-400 text-xs opacity-0 group-hover:opacity-100 transition-all"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
 
               {/* Pie Chart */}
@@ -376,6 +388,7 @@ const Portfolio = () => {
                   ))}
                 </div>
               </div>
+
             </div>
           )}
         </div>
