@@ -29,3 +29,5 @@ export const createAlert = (alertData) => API.post('/alerts', alertData);
 export const getAlerts = () => API.get('/alerts');
 export const deleteAlert = (id) => API.delete(`/alerts/${id}`);
 export const toggleAlert = (id) => API.put(`/alerts/${id}/toggle`);
+// AI Analysis
+export const analyzeCoins = (coin, question) => API.post('/ai/analyze', { coin, question });

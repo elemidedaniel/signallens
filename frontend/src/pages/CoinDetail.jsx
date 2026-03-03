@@ -15,6 +15,7 @@ import NewsCard from '../components/bento/NewsCard';
 import { getCoinDetails, getCoinChart } from "../services/coinGecko";
 import { useWatchlist } from "../context/WatchlistContext";
 import { getSignal } from "../utils/signalLogic";
+import AIAnalysisCard from '../components/bento/AIAnalysisCard';
 
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
@@ -430,8 +431,12 @@ const CoinDetail = () => {
             </div>
           )}
 
+          {/* AI Analysis Card */}
+          <AIAnalysisCard coin={coin} />
+
           {/* News */}
 <NewsCard currency={coin?.symbol} />
+
         </div>
       </main>
     </div>

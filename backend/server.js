@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const coinRoutes = require('./routes/coinRoutes');
 const alertRoutes = require('./routes/alertRoutes');
+const aiRoutes = require('./routes/aiRoutes');
 const { startPriceChecker } = require('./services/priceChecker');
 
 // Load environment variables
@@ -27,6 +28,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/coins', coinRoutes);
 app.use('/api/alerts', alertRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Base route
 app.get('/', (req, res) => {
