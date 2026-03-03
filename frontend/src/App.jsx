@@ -14,9 +14,12 @@ import Markets from "./pages/Markets";
 import Alerts from "./pages/Alerts";
 import Portfolio from "./pages/Portfolio";
 
+import ScrollToTop from './components/ScrollToTop';
+
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <AuthProvider>
         <WatchlistProvider>
           <Routes>
