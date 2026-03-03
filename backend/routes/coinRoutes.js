@@ -261,7 +261,7 @@ router.get('/news', async (req, res) => {
     const cacheKey = `news_${currency}`;
     const now = Date.now();
 
-    if (cache[cacheKey] && now - cache[cacheKey].timestamp < CACHE_DURATION) {
+    if (cache[cacheKey] && now - cache[cacheKey].timestamp < 30 * 60 * 1000) {
       console.log(`✅ Cache hit: ${cacheKey}`);
       return res.json(cache[cacheKey].data);
     }
