@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import Navbar from "../components/layout/Navbar";
 import Sidebar from "../components/layout/Sidebar";
+import NewsCard from '../components/bento/NewsCard';
 import { getCoinDetails, getCoinChart } from "../services/coinGecko";
 import { useWatchlist } from "../context/WatchlistContext";
 import { getSignal } from "../utils/signalLogic";
@@ -428,6 +429,9 @@ const CoinDetail = () => {
               </p>
             </div>
           )}
+
+          {/* News */}
+<NewsCard currency={coin?.symbol} />
         </div>
       </main>
     </div>

@@ -65,3 +65,11 @@ export const getScreenerCoins = async (page = 1, limit = 20) => {
   });
   return data;
 };
+
+// Get crypto news
+export const getCryptoNews = async (currency = '') => {
+  const { data } = await API.get('/news', {
+    params: { currency },
+  });
+  return data;
+};

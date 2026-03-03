@@ -6,6 +6,7 @@ import TrendingMoversCard from '../components/bento/TrendingMoversCard';
 import MarketChartCard from '../components/bento/MarketChartCard';
 import WatchlistCard from '../components/bento/WatchlistCard';
 import MarketSentimentCard from '../components/bento/MarketSentimentCard';
+import NewsCard from '../components/bento/NewsCard';
 import { useAuth } from '../context/AuthContext';
 import { getSignal } from '../utils/signalLogic';
 import { getTopCoins } from '../services/coinGecko';
@@ -191,6 +192,8 @@ const Dashboard = () => {
 
  {/* Market Sentiment */}
 <MarketSentimentCard />
+{/* News Feed */}
+<NewsCard />
 
           </div>
         </div>

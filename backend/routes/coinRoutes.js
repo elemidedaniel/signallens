@@ -4,6 +4,7 @@ const axios = require('axios');
 
 const COINGECKO = 'https://api.coingecko.com/api/v3';
 const ALTERNATIVE_ME = 'https://api.alternative.me';
+const CRYPTOPANIC = 'https://cryptopanic.com/api/free/v1';
 
 // Cache durations
 const CACHE_DURATION = 120 * 1000;        // 2 minutes fresh
@@ -253,6 +254,41 @@ router.get('/fear-greed', async (req, res) => {
     }
 });
 
+// @route GET /api/coins/news
+router.get('/news', async (req, res) => {
+  try {
+    const currency = req.query.currency || 'crypto';
+    const cacheKey = `news_${currency}`;
+    const now = Date.now();
+
+    if (cache[cacheKey] && now - cache[cacheKey].timestamp < CACHE_DURATION) {
+      console.log(`✅ Cache hit: ${cacheKey}`);
+      return res.json(cache[cacheKey].data);
+    }
+
+    console.log(`🌐 Fetching: ${cacheKey}`);
+    const query = currency === 'crypto' ? 'cryptocurrency' : `${currency} crypto`;
+
+    const { data } = await axios.get('https://gnews.io/api/v4/search', {
+      params: {
+        q: query,
+        lang: 'en',
+        country: 'us',
+        max: 10,
+        apikey: process.env.GNEWS_API_KEY,
+      },
+      timeout: 10000,
+    });
+
+    setCache(cacheKey, data);
+    res.json(data);
+  } catch (error) {
+    console.error('News error:', error.message);
+    res.status(500).json({ message: 'Failed to fetch news' });
+  }
+});
+
+
 // @route GET /api/coins/:coinId
 router.get('/:coinId', async (req, res) => {
     try {
@@ -323,6 +359,8 @@ router.get('/:coinId/chart', async (req, res) => {
         res.status(500).json({ message: 'Failed to fetch coin chart' });
     }
 });
+
+
 
 
 
