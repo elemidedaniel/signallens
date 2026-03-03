@@ -1,17 +1,18 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import { WatchlistProvider } from './context/WatchlistContext';
-import ProtectedRoute from './routes/ProtectedRoute';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import { WatchlistProvider } from "./context/WatchlistContext";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 // Pages
-import Landing from './pages/Landing';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
-import CoinDetail from './pages/CoinDetail';
-import Markets from './pages/Markets';
-import Alerts from './pages/Alerts';
+import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+import CoinDetail from "./pages/CoinDetail";
+import Markets from "./pages/Markets";
+import Alerts from "./pages/Alerts";
+import Portfolio from "./pages/Portfolio";
 
 function App() {
   return (
@@ -62,6 +63,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <CoinDetail />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/portfolio"
+              element={
+                <ProtectedRoute>
+                  <Portfolio />
                 </ProtectedRoute>
               }
             />

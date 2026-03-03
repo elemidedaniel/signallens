@@ -29,6 +29,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/coins', coinRoutes);
 app.use('/api/alerts', alertRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/portfolio', require('./routes/portfolioRoutes'));
 
 // Base route
 app.get('/', (req, res) => {

@@ -31,3 +31,8 @@ export const deleteAlert = (id) => API.delete(`/alerts/${id}`);
 export const toggleAlert = (id) => API.put(`/alerts/${id}/toggle`);
 // AI Analysis
 export const analyzeCoins = (coin, question) => API.post('/ai/analyze', { coin, question });
+
+// Portfolio
+export const getPortfolio = () => API.get('/portfolio');
+export const addHolding = (data) => API.post('/portfolio/holding', data);
+export const removeHolding = (coinId) => API.delete(`/portfolio/holding/${coinId}`);
