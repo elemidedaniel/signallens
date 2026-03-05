@@ -257,7 +257,7 @@ router.get('/fear-greed', async (req, res) => {
 // @route GET /api/coins/news
 router.get('/news', async (req, res) => {
   try {
-    const currency = req.query.currency || 'crypto';
+    const currency = req.query.currency || '';
     const cacheKey = `news_${currency}`;
     const now = Date.now();
 
@@ -267,21 +267,81 @@ router.get('/news', async (req, res) => {
     }
 
     console.log(`🌐 Fetching: ${cacheKey}`);
-    const query = currency === 'crypto' ? 'cryptocurrency' : `${currency} crypto`;
 
-    const { data } = await axios.get('https://gnews.io/api/v4/search', {
-      params: {
-        q: query,
-        lang: 'en',
-        country: 'us',
-        max: 10,
-        apikey: process.env.GNEWS_API_KEY,
-      },
-      timeout: 10000,
-    });
+    const feeds = [
+      { url: 'https://www.coindesk.com/arc/outboundfeeds/rss/', name: 'CoinDesk' },
+      { url: 'https://cointelegraph.com/rss', name: 'CoinTelegraph' },
+      { url: 'https://decrypt.co/feed', name: 'Decrypt' },
+    ];
 
-    setCache(cacheKey, data);
-    res.json(data);
+    const feedResults = await Promise.allSettled(
+      feeds.map((feed) =>
+        axios.get(feed.url, {
+          timeout: 10000,
+          headers: { 'User-Agent': 'Mozilla/5.0' },
+        }).then((res) => ({ ...res, sourceName: feed.name }))
+      )
+    );
+
+    // Clean CDATA and HTML tags
+    const cleanCDATA = (str) => str
+      .replace(/<!\[CDATA\[(.*?)\]\]>/gs, '$1')
+      .replace(/<[^>]*>/g, '')
+      .trim();
+
+    let articles = [];
+
+    for (const result of feedResults) {
+      if (result.status !== 'fulfilled') continue;
+
+      const xml = result.value.data;
+      const sourceName = result.value.sourceName;
+
+      // Extract all <item> blocks
+      const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)];
+
+      for (const item of items.slice(0, 5)) {
+        const content = item[1];
+
+        const titleMatch = content.match(/<title>([\s\S]*?)<\/title>/);
+        const linkMatch = content.match(/<link>([\s\S]*?)<\/link>/) ||
+                          content.match(/<link href="([^"]*)"/) ;
+        const dateMatch = content.match(/<pubDate>([\s\S]*?)<\/pubDate>/) ||
+                          content.match(/<published>([\s\S]*?)<\/published>/);
+        const descMatch = content.match(/<description>([\s\S]*?)<\/description>/);
+        const imageMatch = content.match(/url="([^"]*\.(?:jpg|jpeg|png|webp)[^"]*)"/i) ||
+                           content.match(/<media:thumbnail[^>]*url="([^"]*)"/i);
+
+        const title = titleMatch ? cleanCDATA(titleMatch[1]) : null;
+        const url = linkMatch ? cleanCDATA(linkMatch[1]) : null;
+        const date = dateMatch ? cleanCDATA(dateMatch[1]) : null;
+        const description = descMatch ? cleanCDATA(descMatch[1]).slice(0, 200) : '';
+        const image = imageMatch ? imageMatch[1] : null;
+
+        if (!title || !url) continue;
+        if (url === 'https://www.coindesk.com/' || url === 'https://cointelegraph.com') continue;
+        if (currency && !title.toLowerCase().includes(currency.toLowerCase()) &&
+            !description.toLowerCase().includes(currency.toLowerCase())) continue;
+
+        articles.push({
+          id: url,
+          title,
+          url,
+          image,
+          description,
+          publishedAt: date ? new Date(date).toISOString() : new Date().toISOString(),
+          source: { name: sourceName },
+        });
+      }
+    }
+
+    // Sort newest first and limit to 10
+    articles.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+    articles = articles.slice(0, 10);
+
+    const responseData = { articles };
+    setCache(cacheKey, responseData);
+    res.json(responseData);
   } catch (error) {
     console.error('News error:', error.message);
     res.status(500).json({ message: 'Failed to fetch news' });

@@ -120,15 +120,18 @@ const NewsCard = ({ currency = '' }) => {
       </div>
 
       <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
-        <p className="text-gray-600 text-xs">Powered by GNews</p>
-        <a
-          href="https://gnews.io"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-600 hover:text-cyan-400 text-xs transition-colors"
-        >
-          View all news →
-        </a>
+<div className="flex items-center gap-2">
+  <p className="text-gray-600 text-xs">Sources:</p>
+  <span className="text-gray-600 text-xs">CoinDesk · CoinTelegraph · Decrypt</span>
+</div>
+<a
+  href="https://coindesk.com"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="text-gray-600 hover:text-cyan-400 text-xs transition-colors"
+>
+  View all news →
+</a>
       </div>
     </div>
   );
