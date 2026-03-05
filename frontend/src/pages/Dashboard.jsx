@@ -83,8 +83,8 @@ const Dashboard = () => {
           {/* Page Header */}
           <div className="mb-8 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-black tracking-tight">
-                Welcome back, {user?.fullName?.split(' ')[0]} 👋
+              <h1 className="text-2xl font-black tracking-tight">
+                Hello, {user?.fullName?.split(' ')[0]} 👋
               </h1>
               <p className="text-gray-500 text-sm mt-1">
                 Here's what the market is doing right now.
